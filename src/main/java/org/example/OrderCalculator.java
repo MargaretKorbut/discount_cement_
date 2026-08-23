@@ -19,14 +19,14 @@ public class OrderCalculator {
 
     public Map<String, Double> calculate(List<Order> orders){
 
-        orders.sort(Comparator.comparing(Order::getDateTime));
+        orders.sort(Comparator.comparing(Order::dateTime));
 
         Map<String, Double> companyTotals = new HashMap<>();
         double discount = startDiscount;
 
         for (Order order : orders) {
-            double orderCost = order.getKg() * pricePerKg * (1 - discount);
-            companyTotals.merge(order.getCompanyName(), orderCost, Double::sum);
+            double orderCost = order.kg() * pricePerKg * (1 - discount);
+            companyTotals.merge(order.companyName(), orderCost, Double::sum);
             discount -= discountStep;
             if (discount < 0) {
                 discount = 0;
