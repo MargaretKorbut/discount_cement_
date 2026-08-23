@@ -8,21 +8,22 @@ import java.util.function.Function;
 
 public class OrderAdapterFactory {
 
-    private static final Map<String, Function<Path, OrderSource>> REGISTRY = new HashMap<>();
+    private final Map<String, Function<Path, OrderSource>> registry;
 
-    static {
-        register(".txt", TxtOrderAdapter::new);
-        register("", NoExtensionOrderAdapter::new);
+    public OrderAdapterFactory() {
+        registry = new HashMap<>();
+        registerDefaultAdapters();
     }
 
-    public static void register(String extension, Function<Path, OrderSource> factory) {
-        REGISTRY.put(extension, factory);
+    private void registerDefaultAdapters() {
+        registry.put(".txt", TxtOrderAdapter::new);
+        registry.put("", NoExtensionOrderAdapter::new);
     }
 
-    public static OrderSource create(Path path) {
+    public OrderSource create(Path path) {
         String name = path.getFileName().toString();
         String ext = name.contains(".") ? name.substring(name.lastIndexOf('.')) : "";
-        Function<Path, OrderSource> factory = REGISTRY.get(ext);
+        Function<Path, OrderSource> factory = registry.get(ext);
         if (factory == null) {
             throw new IllegalArgumentException("Неизвестный формат файла: " + name);
         }

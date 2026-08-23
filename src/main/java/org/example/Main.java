@@ -23,7 +23,10 @@ public class Main {
         }
 
         Path inputFile = Path.of(args[0]);
-        OrderSource source = OrderAdapterFactory.create(inputFile);
+
+        OrderAdapterFactory adapterFactory = new OrderAdapterFactory();
+        OrderSource source = adapterFactory.create(inputFile);
+
         List<Order> orders = source.getOrders();
 
         OrderCalculator calculator = new OrderCalculator(PRICE_PER_KG, START_DISCOUNT, DISCOUNT_STEP);
