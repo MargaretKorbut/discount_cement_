@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 public class OrderCalculator {
 
@@ -19,12 +20,13 @@ public class OrderCalculator {
 
     public Map<String, Double> calculate(List<Order> orders){
 
-        orders.sort(Comparator.comparing(Order::dateTime));
+        List<Order> sortedOrders = new ArrayList<>(orders);
+        sortedOrders.sort(Comparator.comparing(Order::dateTime));
 
         Map<String, Double> companyTotals = new HashMap<>();
         double discount = startDiscount;
 
-        for (Order order : orders) {
+        for (Order order : sortedOrders) {
             double orderCost = order.kg() * pricePerKg * (1 - discount);
             companyTotals.merge(order.companyName(), orderCost, Double::sum);
             discount -= discountStep;
